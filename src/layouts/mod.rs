@@ -7,6 +7,7 @@ use std::str::FromStr;
 
 mod center_main;
 mod center_main_balanced;
+mod center_main_balanced_maxed;
 mod even_horizontal;
 mod even_vertical;
 mod fibonacci;
@@ -28,12 +29,13 @@ pub enum Layout {
     Fibonacci,
     CenterMain,
     CenterMainBalanced,
+    CenterMainBalancedMaxed,
     Monocle,
     RightWiderLeftStack,
     LeftWiderRightStack,
 }
 
-pub const LAYOUTS: [Layout; 12] = [
+pub const LAYOUTS: [Layout; 13] = [
     Layout::MainAndVertStack,
     Layout::MainAndHorizontalStack,
     Layout::MainAndDeck,
@@ -43,6 +45,7 @@ pub const LAYOUTS: [Layout; 12] = [
     Layout::Fibonacci,
     Layout::CenterMain,
     Layout::CenterMainBalanced,
+    Layout::CenterMainBalancedMaxed,
     Layout::Monocle,
     Layout::RightWiderLeftStack,
     Layout::LeftWiderRightStack,
@@ -76,6 +79,7 @@ impl Layout {
             Self::Fibonacci => fibonacci::update(workspace, windows, tags),
             Self::CenterMain => center_main::update(workspace, windows, tags),
             Self::CenterMainBalanced => center_main_balanced::update(workspace, windows, tags),
+            Self::CenterMainBalancedMaxed => center_main_balanced_maxed::update(workspace, windows, tags),
             Self::Monocle => monocle::update(workspace, windows),
             Self::RightWiderLeftStack => {
                 right_main_and_vert_stack::update(workspace, windows, tags);
@@ -141,6 +145,7 @@ impl FromStr for Layout {
             "Fibonacci" => Ok(Layout::Fibonacci),
             "CenterMain" => Ok(Layout::CenterMain),
             "CenterMainBalanced" => Ok(Layout::CenterMainBalanced),
+            "CenterMainBalancedMaxed" => Ok(Layout::CenterMainBalancedMaxed),
             "Monocle" => Ok(Layout::Monocle),
             "RightWiderLeftStack" => Ok(Layout::RightWiderLeftStack),
             "LeftWiderRightStack" => Ok(Layout::LeftWiderRightStack),
@@ -187,7 +192,7 @@ mod tests {
 
     #[test]
     fn test_from_str() {
-        let layout_strs: [&str; 12] = [
+        let layout_strs: [&str; 13] = [
             "MainAndVertStack",
             "MainAndHorizontalStack",
             "MainAndDeck",
@@ -197,6 +202,7 @@ mod tests {
             "Fibonacci",
             "CenterMain",
             "CenterMainBalanced",
+            "CenterMainBalancedMaxed",
             "Monocle",
             "RightWiderLeftStack",
             "LeftWiderRightStack",
