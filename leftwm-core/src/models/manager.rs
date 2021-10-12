@@ -63,7 +63,7 @@ where
     /// Return the index of a given tag.
     #[must_use]
     pub fn tag_index(&self, tag: &str) -> Option<usize> {
-        Some(self.state.tags.iter().position(|t| t.id == tag)).unwrap_or(None)
+        Some(self.state.tags.iter().position(|t| t.label == tag)).unwrap_or(None)
     }
 
     /// Return the currently focused window.

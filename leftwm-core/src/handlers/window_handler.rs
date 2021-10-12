@@ -262,7 +262,7 @@ fn setup_window<C: Config, SERVER: DisplayServer>(
             }
         }
     } else {
-        window.tags = vec![manager.state.tags[0].id.clone()];
+        window.tags = vec![manager.state.tags[0].label.clone()];
         if is_scratchpad(manager, window) {
             window.tag("NSP");
             window.set_floating(true);

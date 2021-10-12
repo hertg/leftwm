@@ -45,7 +45,7 @@ where
             .map(|s| Tag::new(s, layout_manager.new_layout()))
             .collect();
         tags.push(Tag {
-            id: "NSP".to_owned(),
+            label: "NSP".to_owned(),
             hidden: true,
             ..Tag::default()
         });
@@ -85,7 +85,7 @@ where
 
         // restore tags
         for tag in &mut self.state.tags {
-            if let Some(old_tag) = state.tags.iter().find(|t| t.id == tag.id) {
+            if let Some(old_tag) = state.tags.iter().find(|t| t.label == tag.label) {
                 tag.hidden = old_tag.hidden;
                 tag.layout = old_tag.layout;
                 tag.layout_rotation = old_tag.layout_rotation;
@@ -120,16 +120,16 @@ where
                 } else {
                     old.tags.iter().for_each(|t| {
                         let manager_tags = &self.state.tags.clone();
-                        if let Some(tag_index) = &state.tags.clone().iter().position(|o| &o.id == t)
+                        if let Some(tag_index) = &state.tags.clone().iter().position(|o| &o.label == t)
                         {
                             window.clear_tags();
                             // if the config prior reload had more tags then the current one
                             // we want to move windows of 'lost tags' to the 'first' tag
                             // also we want to ignore the `NSP` tag for length check
                             if tag_index < &(manager_tags.len() - 1) || t == "NSP" {
-                                window.tag(&manager_tags[*tag_index].id);
+                                window.tag(&manager_tags[*tag_index].label);
                             } else if let Some(tag) = manager_tags.first() {
-                                window.tag(&tag.id);
+                                window.tag(&tag.label);
                             }
                         }
                     });

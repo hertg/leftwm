@@ -171,7 +171,7 @@ fn move_to_tag<C: Config, SERVER: DisplayServer>(
 
     // In order to apply the correct margin multiplier we want to copy this value
     // from any window already present on the target tag
-    let margin_multiplier = match manager.state.windows.iter().find(|w| w.has_tag(&tag.id)) {
+    let margin_multiplier = match manager.state.windows.iter().find(|w| w.has_tag(&tag.label)) {
         Some(w) => w.margin_multiplier(),
         None => 1.0,
     };
@@ -183,9 +183,9 @@ fn move_to_tag<C: Config, SERVER: DisplayServer>(
     let window = manager.focused_window_mut()?;
     window.clear_tags();
     window.set_floating(false);
-    window.tag(&tag.id);
+    window.tag(&tag.label);
     window.apply_margin_multiplier(margin_multiplier);
-    let act = DisplayAction::SetWindowTags(window.handle, tag.id);
+    let act = DisplayAction::SetWindowTags(window.handle, tag.label);
     manager.state.actions.push_back(act);
 
     manager.sort_windows();
@@ -206,7 +206,7 @@ fn move_window_to_workspace_change<C: Config, SERVER: DisplayServer>(
         .state
         .tags
         .iter()
-        .position(|t| workspace.has_tag(&t.id))?;
+        .position(|t| workspace.has_tag(&t.label))?;
     move_to_tag(tag_num + 1, manager)
 }
 
@@ -239,7 +239,7 @@ fn focus_tag_change<C: Config, SERVER: DisplayServer>(
         .iter()
         .enumerate()
         .filter(|(_, tag)| !tag.hidden)
-        .map(|(i, tag)| (i + 1, tag.id.clone()))
+        .map(|(i, tag)| (i + 1, tag.label.clone()))
         .collect();
     let mut index = active_tags
         .iter()
@@ -296,7 +296,7 @@ fn swap_tags<C: Config, SERVER: DisplayServer>(manager: &mut Manager<C, SERVER>)
             .get(1)
             .map(std::string::ToString::to_string)?;
 
-        let tag_index = manager.state.tags.iter().position(|x| x.id == last)? + 1;
+        let tag_index = manager.state.tags.iter().position(|x| x.label == last)? + 1;
         return manager.goto_tag_handler(tag_index);
     }
     None
@@ -336,7 +336,7 @@ fn next_layout<C: Config, SERVER: DisplayServer>(manager: &mut Manager<C, SERVER
     let layout = manager.state.layout_manager.next_layout(workspace.layout);
     workspace.layout = layout;
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter_mut().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter_mut().find(|t| t.label == tag_id)?;
     tag.set_layout(layout);
     Some(true)
 }
@@ -354,7 +354,7 @@ fn previous_layout<C: Config, SERVER: DisplayServer>(
         .previous_layout(workspace.layout);
     workspace.layout = layout;
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter_mut().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter_mut().find(|t| t.label == tag_id)?;
     tag.set_layout(layout);
     Some(true)
 }
@@ -369,7 +369,7 @@ fn set_layout<C: Config, SERVER: DisplayServer>(
         .workspace_mut(&mut manager.state.workspaces)?;
     workspace.layout = layout;
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter_mut().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter_mut().find(|t| t.label == tag_id)?;
     tag.set_layout(layout);
     Some(true)
 }
@@ -402,7 +402,7 @@ where
 {
     let handle = manager.focused_window()?.handle;
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter().find(|t| t.label == tag_id)?;
     let (tags, layout) = (vec![tag_id], Some(tag.layout));
 
     let for_active_workspace =
@@ -532,7 +532,7 @@ fn focus_workspace_change<C: Config, SERVER: DisplayServer>(
 
 fn rotate_tag<C: Config, SERVER: DisplayServer>(manager: &mut Manager<C, SERVER>) -> Option<bool> {
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter_mut().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter_mut().find(|t| t.label == tag_id)?;
     tag.rotate_layout()?;
     Some(true)
 }
@@ -543,7 +543,7 @@ fn change_main_width<C: Config, SERVER: DisplayServer>(
     factor: i8,
 ) -> Option<bool> {
     let tag_id = manager.state.focus_manager.tag(0)?;
-    let tag = manager.state.tags.iter_mut().find(|t| t.id == tag_id)?;
+    let tag = manager.state.tags.iter_mut().find(|t| t.label == tag_id)?;
     tag.change_main_width(delta * factor);
     Some(true)
 }

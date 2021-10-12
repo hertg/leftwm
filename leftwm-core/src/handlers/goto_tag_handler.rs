@@ -8,7 +8,7 @@ impl<C: Config, SERVER: DisplayServer> Manager<C, SERVER> {
             return Some(false);
         }
 
-        let tag_id = self.state.tags[tag_num - 1].id.clone();
+        let tag_id = self.state.tags[tag_num - 1].label.clone();
         let new_tags = vec![tag_id.clone()];
         //no focus safety check
         let old_tags = self.focused_workspace()?.tags.clone();
