@@ -135,8 +135,9 @@ impl<C: Config, SERVER: DisplayServer> From<&Manager<C, SERVER>> for ManagerStat
         };
         Self {
             window_title,
-            desktop_names: manager.state.tags[0..tags_len]
+            desktop_names: manager.state.tags
                 .iter()
+                .filter(|t| !t.hidden)
                 .map(|t| t.label.clone())
                 .collect(),
             viewports,
