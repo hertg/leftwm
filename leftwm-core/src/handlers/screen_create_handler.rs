@@ -8,7 +8,7 @@ impl<C: Config, SERVER: DisplayServer> Manager<C, SERVER> {
     ///
     /// Returns `true` if changes need to be rendered.
     pub fn screen_create_handler(&mut self, screen: Screen) -> bool {
-        let tag_index = self.state.workspaces.len();
+        let current_workspace_count = self.state.workspaces.len();
 
         let mut workspace = Workspace::new(
             screen.wsid,
@@ -33,16 +33,22 @@ impl<C: Config, SERVER: DisplayServer> Manager<C, SERVER> {
             dbg!("Workspace ID needs to be less than or equal to the number of tags available.");
         }
         workspace.update_for_theme(&self.state.config);
-        //make sure are enough tags for this new screen
-        if self.state.tags.len() <= tag_index {
-            let id = (tag_index + 1).to_string();
+        
+        let visible_tags: Vec<&Tag> = self.state.tags.iter().filter(|tag| !tag.hidden).collect();
+        let tag_count = visible_tags.len();
+        if tag_count <= current_workspace_count {
+            // there are no tags left to assign to this new screen/workspace,
+            // we need to create another tag here, so every workspace has one
+            let id = (current_workspace_count + 1) as u8;
+            let label = id.to_string();
+            let new_tag = Tag::new(id, &label, self.state.layout_manager.new_layout());
             self.state
                 .tags
-                .push(Tag::new(&id, self.state.layout_manager.new_layout()));
+                .insert(current_workspace_count, new_tag);
         }
-        let next_tag = self.state.tags[tag_index].clone();
+        let next_tag = self.state.tags[current_workspace_count].clone();
         self.focus_workspace(&workspace);
-        self.focus_tag(&next_tag.label);
+        self.focus_tag(&next_tag.label.as_str());
         workspace.show_tag(&next_tag);
         self.state.workspaces.push(workspace.clone());
         self.state.workspaces.sort_by(|a, b| a.id.cmp(&b.id));

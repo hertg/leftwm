@@ -260,7 +260,7 @@ mod tests {
             Layout::default(),
             None,
         );
-        let tag = crate::models::Tag::new("test", Layout::default());
+        let tag = crate::models::Tag::new(1, "test", Layout::default());
         subject.show_tag(&tag);
         let mut w = Window::new(WindowHandle::MockHandle(1), None, None);
         w.tag("test");

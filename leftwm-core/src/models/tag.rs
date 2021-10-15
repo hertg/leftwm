@@ -4,6 +4,7 @@ use crate::{layouts::Layout, Window, Workspace};
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Tag {
+    pub id: u8,
     pub label: String,
     pub hidden: bool,
     pub layout: Layout,
@@ -15,9 +16,10 @@ pub struct Tag {
 
 impl Tag {
     #[must_use]
-    pub fn new(id: &str, layout: Layout) -> Tag {
+    pub fn new(id: u8, label: &str, layout: Layout) -> Tag {
         Tag {
-            label: id.to_owned(),
+            id,
+            label: label.to_owned(),
             hidden: false,
             layout,
             main_width_percentage: 50,

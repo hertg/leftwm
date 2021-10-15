@@ -42,9 +42,11 @@ where
         let mut tags: Vec<Tag> = config
             .create_list_of_tags()
             .iter()
-            .map(|s| Tag::new(s, layout_manager.new_layout()))
+            .enumerate()
+            .map(|(index, label)| Tag::new((index as u8) + 1, label, layout_manager.new_layout()))
             .collect();
         tags.push(Tag {
+            id: (tags.len() + 1) as u8,
             label: "NSP".to_owned(),
             hidden: true,
             ..Tag::default()
