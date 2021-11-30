@@ -4,7 +4,7 @@ use super::{BaseCommand, ThemeSetting};
 use anyhow::{Context, Result};
 use leftwm_core::{
     config::{ScratchPad, Workspace},
-    layouts::{Layout, LAYOUTS},
+    layouts::{Layouts, LAYOUTS},
     models::{FocusBehaviour, Gutter, LayoutMode, Margins, Size},
     state::State,
     Manager,
@@ -80,7 +80,7 @@ impl TryFrom<Keybind> for leftwm_core::Keybind {
             BaseCommand::NextLayout => leftwm_core::Command::NextLayout,
             BaseCommand::PreviousLayout => leftwm_core::Command::PreviousLayout,
             BaseCommand::SetLayout => leftwm_core::Command::SetLayout(
-                Layout::from_str(&k.value.context("missing layout for SetLayout")?)
+                Layouts::from_str(&k.value.context("missing layout for SetLayout")?)
                     .context("could not parse layout for command SetLayout")?,
             ),
             BaseCommand::RotateTag => leftwm_core::Command::RotateTag,
@@ -123,7 +123,7 @@ pub struct Config {
     pub workspaces: Option<Vec<Workspace>>,
     pub tags: Option<Vec<String>>,
     pub max_window_width: Option<Size>,
-    pub layouts: Vec<Layout>,
+    pub layouts: Vec<Layouts>,
     pub layout_mode: LayoutMode,
     pub scratchpad: Option<Vec<ScratchPad>>,
     //of you are on tag "1" and you goto tag "1" this takes you to the previous tag
@@ -324,7 +324,7 @@ impl leftwm_core::Config for Config {
         return vec![];
     }
 
-    fn layouts(&self) -> Vec<Layout> {
+    fn layouts(&self) -> Vec<Layouts> {
         self.layouts.clone()
     }
 

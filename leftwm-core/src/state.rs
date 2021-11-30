@@ -1,7 +1,7 @@
 //! Save and restore manager state.
 
 use crate::config::{Config, ScratchPad};
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 use crate::models::Screen;
 use crate::models::Size;
 use crate::models::Tags;
@@ -22,7 +22,7 @@ pub struct State {
     pub focus_manager: FocusManager,
     pub layout_manager: LayoutManager,
     pub mode: Mode,
-    pub layouts: Vec<Layout>,
+    pub layouts: Vec<Layouts>,
     pub scratchpads: Vec<ScratchPad>,
     pub active_scratchpads: HashMap<String, Option<u32>>,
     pub actions: VecDeque<DisplayAction>,

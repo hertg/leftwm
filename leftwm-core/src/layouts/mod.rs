@@ -1,6 +1,7 @@
 use super::models::Window;
 use super::models::Workspace;
 use crate::models::Tag;
+use crate::models::Xyhw;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use thiserror::Error;
@@ -18,7 +19,7 @@ mod monocle;
 mod right_main_and_vert_stack;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
-pub enum Layout {
+pub enum Layouts {
     MainAndVertStack,
     MainAndHorizontalStack,
     MainAndDeck,
@@ -33,29 +34,63 @@ pub enum Layout {
     LeftWiderRightStack,
 }
 
-pub const LAYOUTS: &[Layout] = &[
-    Layout::MainAndVertStack,
-    Layout::MainAndHorizontalStack,
-    Layout::MainAndDeck,
-    Layout::GridHorizontal,
-    Layout::EvenHorizontal,
-    Layout::EvenVertical,
-    Layout::Fibonacci,
-    Layout::CenterMain,
-    Layout::CenterMainBalanced,
-    Layout::Monocle,
-    Layout::RightWiderLeftStack,
-    Layout::LeftWiderRightStack,
+pub const LAYOUTS: &[Layouts] = &[
+    Layouts::MainAndVertStack,
+    Layouts::MainAndHorizontalStack,
+    Layouts::MainAndDeck,
+    Layouts::GridHorizontal,
+    Layouts::EvenHorizontal,
+    Layouts::EvenVertical,
+    Layouts::Fibonacci,
+    Layouts::CenterMain,
+    Layouts::CenterMainBalanced,
+    Layouts::Monocle,
+    Layouts::RightWiderLeftStack,
+    Layouts::LeftWiderRightStack,
 ];
 
-impl Default for Layout {
+impl Default for Layouts {
     fn default() -> Self {
-        Layout::MainAndVertStack
+        Layouts::MainAndVertStack
     }
 }
 
+trait Layout {
+    /// Calculate the window positions based on the given window_count and layout modifiers.
+    /// Returns a list of `Option<Xyhw>`, a `None` value must be interpreted as the window being invisible.
+    fn calculate(window_count: u8, modifiers: LayoutModifiers) -> Vec<Option<Xyhw>>;
+}
+
+struct LayoutModifiers {
+    /// The size and position of the "container" (usually the workspace/screen)
+    container: Xyhw,
+
+    // todo: margin-multiplier?
+    /// The amount of estate the master window (or column) can occupy
+    master_width_percentage: u8,
+
+    /// The amount of windows that should be displayed in the master column
+    master_window_count: u8,
+    // todo: remove? the container size could be limited already to make it easier
+    // The maximum width a column should have.
+    // (currently called: max-window-width)
+    // max_column_width: u8,
+}
+
 // This is tedious, but simple and effective.
-impl Layout {
+impl Layouts {
+    fn apply(&self, workspace: &Workspace, windows: &mut Vec<&mut Window>, tag: &Tag) {
+        let window_count = windows.len();
+       
+        /*
+        match self {
+            Self::CenterMain => center_main::CenterMain::calculate(window_count, modifiers)
+        }
+        */
+
+        todo!()
+    }
+
     pub fn update_windows(&self, workspace: &Workspace, windows: &mut Vec<&mut Window>, tag: &Tag) {
         match self {
             Self::MainAndVertStack | Self::LeftWiderRightStack => {
@@ -104,7 +139,7 @@ impl Layout {
 #[error("Could not parse layout: {0}")]
 pub struct ParseLayoutError(String);
 
-impl FromStr for Layout {
+impl FromStr for Layouts {
     type Err = ParseLayoutError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -142,7 +177,7 @@ mod tests {
                 x: 0,
                 y: 0,
             },
-            Layout::default(),
+            Layouts::default(),
             None,
         );
         ws.margin = Margins::new(0);
@@ -184,7 +219,7 @@ mod tests {
         for (i, layout) in LAYOUTS.iter().enumerate() {
             assert_eq!(
                 layout,
-                &Layout::from_str(layout_strs[i]).expect("Layout String")
+                &Layouts::from_str(layout_strs[i]).expect("Layout String")
             );
         }
     }

@@ -1,6 +1,11 @@
+use x11_dl::xlib::CenterGravity;
+
 use crate::models::Tag;
 use crate::models::Window;
 use crate::models::Workspace;
+
+use super::Layout;
+use crate::models::Xyhw;
 
 /// Layout which splits the workspace into three columns.
 /// Gives first window all of the center column.
@@ -144,5 +149,15 @@ pub fn update(workspace: &Workspace, tag: &Tag, windows: &mut Vec<&mut Window>) 
             w.set_y(workspace.y() + y);
             y += height;
         }
+    }
+}
+
+pub struct CenterMain;
+
+impl Layout for CenterMain {
+    fn calculate(window_count: u8, modifiers: super::LayoutModifiers) -> Vec<Option<Xyhw>> {
+        
+
+        todo!()
     }
 }

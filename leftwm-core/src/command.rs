@@ -1,4 +1,4 @@
-use crate::{layouts::Layout, models::TagId};
+use crate::{layouts::Layouts, models::TagId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -31,7 +31,7 @@ pub enum Command {
     MouseMoveWindow,
     NextLayout,
     PreviousLayout,
-    SetLayout(Layout),
+    SetLayout(Layouts),
     RotateTag,
     IncreaseMainWidth(i8),
     DecreaseMainWidth(i8),

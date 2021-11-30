@@ -1,5 +1,5 @@
 use super::Tag;
-use crate::{config::Config, layouts::Layout, Workspace};
+use crate::{config::Config, layouts::Layouts, Workspace};
 
 use serde::{Deserialize, Serialize};
 
@@ -18,7 +18,7 @@ impl Default for LayoutMode {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct LayoutManager {
     pub mode: LayoutMode,
-    pub layouts: Vec<Layout>,
+    pub layouts: Vec<Layouts>,
 }
 
 impl LayoutManager {
@@ -29,14 +29,14 @@ impl LayoutManager {
         }
     }
 
-    pub fn new_layout(&self) -> Layout {
-        *self.layouts.first().unwrap_or(&Layout::default())
+    pub fn new_layout(&self) -> Layouts {
+        *self.layouts.first().unwrap_or(&Layouts::default())
     }
 
-    pub fn next_layout(&self, layout: Layout) -> Layout {
+    pub fn next_layout(&self, layout: Layouts) -> Layouts {
         let mut index = match self.layouts.iter().position(|&x| x == layout) {
             Some(x) => x as isize,
-            None => return Layout::default(),
+            None => return Layouts::default(),
         } + 1;
         if index >= self.layouts.len() as isize {
             index = 0;
@@ -44,10 +44,10 @@ impl LayoutManager {
         self.layouts[index as usize]
     }
 
-    pub fn previous_layout(&self, layout: Layout) -> Layout {
+    pub fn previous_layout(&self, layout: Layouts) -> Layouts {
         let mut index = match self.layouts.iter().position(|&x| x == layout) {
             Some(x) => x as isize,
-            None => return Layout::default(),
+            None => return Layouts::default(),
         } - 1;
         if index < 0 {
             index = self.layouts.len() as isize - 1;

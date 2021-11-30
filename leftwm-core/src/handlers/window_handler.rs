@@ -2,7 +2,7 @@ use super::{Manager, Window, WindowChange, WindowType, Workspace};
 use crate::config::{Config, ScratchPad};
 use crate::display_action::DisplayAction;
 use crate::display_servers::DisplayServer;
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 use crate::models::{Size, WindowHandle, WindowState, Xyhw, XyhwBuilder};
 use crate::state::State;
 use crate::utils::helpers;
@@ -22,7 +22,7 @@ impl<C: Config, SERVER: DisplayServer> Manager<C, SERVER> {
         let mut is_first = false;
         let mut on_same_tag = true;
         //Random value
-        let mut layout: Layout = Layout::MainAndVertStack;
+        let mut layout: Layouts = Layouts::MainAndVertStack;
         setup_window(
             &mut self.state,
             &mut window,
@@ -196,7 +196,7 @@ fn setup_window(
     state: &mut State,
     window: &mut Window,
     xy: (i32, i32),
-    layout: &mut Layout,
+    layout: &mut Layouts,
     is_first: &mut bool,
     on_same_tag: &mut bool,
 ) {
@@ -278,7 +278,7 @@ fn setup_window(
     }
 }
 
-fn insert_window(state: &mut State, window: &mut Window, layout: Layout) {
+fn insert_window(state: &mut State, window: &mut Window, layout: Layouts) {
     let mut was_fullscreen = false;
     if window.r#type == WindowType::Normal {
         let for_active_workspace =
@@ -294,10 +294,10 @@ fn insert_window(state: &mut State, window: &mut Window, layout: Layout) {
             state.actions.push_back(act);
             was_fullscreen = true;
         }
-        if matches!(layout, Layout::Monocle | Layout::MainAndDeck) {
+        if matches!(layout, Layouts::Monocle | Layouts::MainAndDeck) {
             // Extract the current windows on the same workspace.
             let mut to_reorder = helpers::vec_extract(&mut state.windows, for_active_workspace);
-            if layout == Layout::Monocle || to_reorder.is_empty() {
+            if layout == Layouts::Monocle || to_reorder.is_empty() {
                 // When in monocle we want the new window to be fullscreen if a window was
                 // fullscreen.
                 if was_fullscreen {

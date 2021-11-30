@@ -2,7 +2,7 @@ mod keybind;
 mod scratchpad;
 mod workspace_config;
 
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 pub use crate::models::{FocusBehaviour, Gutter, Margins, Size};
 use crate::models::{LayoutMode, Manager};
 use crate::state::State;
@@ -27,7 +27,7 @@ pub trait Config {
 
     fn create_list_of_scratchpads(&self) -> Vec<ScratchPad>;
 
-    fn layouts(&self) -> Vec<Layout>;
+    fn layouts(&self) -> Vec<Layouts>;
 
     fn layout_mode(&self) -> LayoutMode;
 
@@ -91,7 +91,7 @@ impl Config for TestConfig {
     fn create_list_of_scratchpads(&self) -> Vec<ScratchPad> {
         vec![]
     }
-    fn layouts(&self) -> Vec<Layout> {
+    fn layouts(&self) -> Vec<Layouts> {
         vec![]
     }
     fn layout_mode(&self) -> LayoutMode {

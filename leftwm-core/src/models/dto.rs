@@ -1,4 +1,4 @@
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 use crate::state::State;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +9,7 @@ pub struct Viewport {
     pub w: u32,
     pub x: i32,
     pub y: i32,
-    pub layout: Layout,
+    pub layout: Layouts,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -37,7 +37,7 @@ pub struct DisplayWorkspace {
     pub w: u32,
     pub x: i32,
     pub y: i32,
-    pub layout: Layout,
+    pub layout: Layouts,
     pub index: usize,
     pub tags: Vec<TagsForWorkspace>,
 }

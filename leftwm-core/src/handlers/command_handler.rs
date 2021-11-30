@@ -9,7 +9,7 @@ use super::*;
 use crate::child_process::Children;
 use crate::display_action::DisplayAction;
 use crate::display_servers::DisplayServer;
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 use crate::models::{TagId, WindowState};
 use crate::state::State;
 use crate::utils::helpers::relative_find;
@@ -321,7 +321,7 @@ fn previous_layout(state: &mut State) -> Option<bool> {
     set_layout(layout, state)
 }
 
-fn set_layout(layout: Layout, state: &mut State) -> Option<bool> {
+fn set_layout(layout: Layouts, state: &mut State) -> Option<bool> {
     let tag_id = state.focus_manager.tag(0)?;
     // When switching to Monocle or MainAndDeck layout while in Driven
     // or ClickTo focus mode, we check if the focus is given to a visible window.
@@ -339,13 +339,13 @@ fn set_layout(layout: Layout, state: &mut State) -> Option<bool> {
         if !is_focused_floating {
             let mut to_focus: Option<Window> = None;
 
-            if layout == Layout::Monocle {
+            if layout == Layouts::Monocle {
                 to_focus = state
                     .windows
                     .iter()
                     .find(|w| w.has_tag(&tag_id) && !w.is_unmanaged() && !w.floating())
                     .cloned();
-            } else if layout == Layout::MainAndDeck {
+            } else if layout == Layouts::MainAndDeck {
                 let tags_windows = state
                     .windows
                     .iter()
@@ -433,7 +433,7 @@ fn toggle_floating(state: &mut State) -> Option<bool> {
 
 fn move_focus_common_vars<F>(func: F, state: &mut State, val: i32) -> Option<bool>
 where
-    F: Fn(&mut State, i32, WindowHandle, Option<Layout>, Vec<Window>) -> Option<bool>,
+    F: Fn(&mut State, i32, WindowHandle, Option<Layouts>, Vec<Window>) -> Option<bool>,
 {
     let handle = state.focus_manager.window(&state.windows)?.handle;
     let tag_id = state.focus_manager.tag(0)?;
@@ -451,14 +451,14 @@ fn move_window_change(
     state: &mut State,
     val: i32,
     mut handle: WindowHandle,
-    layout: Option<Layout>,
+    layout: Option<Layouts>,
     mut to_reorder: Vec<Window>,
 ) -> Option<bool> {
     let is_handle = |x: &Window| -> bool { x.handle == handle };
-    if let Some(Layout::Monocle) = layout {
+    if let Some(Layouts::Monocle) = layout {
         handle = helpers::relative_find(&to_reorder, is_handle, -val, true)?.handle;
         let _ = helpers::cycle_vec(&mut to_reorder, val);
-    } else if let Some(Layout::MainAndDeck) = layout {
+    } else if let Some(Layouts::MainAndDeck) = layout {
         if let Some(index) = to_reorder.iter().position(|x: &Window| !x.floating()) {
             let mut window_group = to_reorder.split_off(index + 1);
             if !to_reorder.iter().any(|w| w.handle == handle) {
@@ -479,7 +479,7 @@ fn move_window_top(
     state: &mut State,
     _val: i32,
     handle: WindowHandle,
-    _layout: Option<Layout>,
+    _layout: Option<Layouts>,
     mut to_reorder: Vec<Window>,
 ) -> Option<bool> {
     // Moves the selected window at index 0 of the window list.
@@ -511,17 +511,17 @@ fn focus_window_change(
     state: &mut State,
     val: i32,
     mut handle: WindowHandle,
-    layout: Option<Layout>,
+    layout: Option<Layouts>,
     mut to_reorder: Vec<Window>,
 ) -> Option<bool> {
     let is_handle = |x: &Window| -> bool { x.handle == handle };
-    if let Some(Layout::Monocle) = layout {
+    if let Some(Layouts::Monocle) = layout {
         // For Monocle we want to also move windows up/down
         // Not the best solution but results
         // in desired behaviour
         handle = helpers::relative_find(&to_reorder, is_handle, -val, true)?.handle;
         let _ = helpers::cycle_vec(&mut to_reorder, val);
-    } else if let Some(Layout::MainAndDeck) = layout {
+    } else if let Some(Layouts::MainAndDeck) = layout {
         let len = to_reorder.len() as i32;
         if len > 0 {
             let index = match to_reorder.iter().position(|x: &Window| !x.floating()) {
@@ -649,12 +649,12 @@ mod tests {
         let mut manager = Manager::new_test(vec![]);
         manager.screen_create_handler(Screen::default());
         manager.state.tags = Tags::new();
-        manager.state.tags.add_new("A15", Layout::default());
-        manager.state.tags.add_new("B24", Layout::default());
-        manager.state.tags.add_new("C", Layout::default());
-        manager.state.tags.add_new("6D4", Layout::default());
-        manager.state.tags.add_new("E39", Layout::default());
-        manager.state.tags.add_new("F67", Layout::default());
+        manager.state.tags.add_new("A15", Layouts::default());
+        manager.state.tags.add_new("B24", Layouts::default());
+        manager.state.tags.add_new("C", Layouts::default());
+        manager.state.tags.add_new("6D4", Layouts::default());
+        manager.state.tags.add_new("E39", Layouts::default());
+        manager.state.tags.add_new("F67", Layouts::default());
         assert!(!manager.command_handler(&Command::GotoTag(0)));
         assert!(!manager.command_handler(&Command::GotoTag(999)));
     }

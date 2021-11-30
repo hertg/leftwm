@@ -1,5 +1,5 @@
 //! Creates a pipe to listen for external commands.
-use crate::layouts::Layout;
+use crate::layouts::Layouts;
 use crate::models::TagId;
 use crate::Command;
 use std::path::{Path, PathBuf};
@@ -141,7 +141,7 @@ fn build_set_layout(raw: &str) -> Result<Command, Box<dyn std::error::Error>> {
     let headless = without_head(raw, "SetLayout ");
     let parts: Vec<&str> = headless.split(' ').collect();
     let layout_name = *parts.get(0).ok_or("missing layout name")?;
-    Ok(Command::SetLayout(Layout::from_str(layout_name)?))
+    Ok(Command::SetLayout(Layouts::from_str(layout_name)?))
 }
 
 fn build_set_margin_multiplier(raw: &str) -> Result<Command, Box<dyn std::error::Error>> {

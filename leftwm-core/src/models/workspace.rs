@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::models::{
-    layouts::Layout, BBox, Gutter, Margins, Side, Size, TagId, Window, Xyhw, XyhwBuilder,
+    layouts::Layouts, BBox, Gutter, Margins, Side, Size, TagId, Window, Xyhw, XyhwBuilder,
 };
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -10,7 +10,7 @@ use std::fmt;
 pub struct Workspace {
     pub id: Option<i32>,
     /// Active layout
-    pub layout: Layout,
+    pub layout: Layouts,
     pub main_width_percentage: u8,
     pub tags: Vec<TagId>,
     pub margin: Margins,
@@ -47,7 +47,7 @@ impl Workspace {
     pub fn new(
         id: Option<i32>,
         bbox: BBox,
-        layout: Layout,
+        layout: Layouts,
         max_window_width: Option<Size>,
     ) -> Self {
         Self {
@@ -257,7 +257,7 @@ mod tests {
                 x: 0,
                 y: 0,
             },
-            Layout::default(),
+            Layouts::default(),
             None,
         );
         let w = Window::new(WindowHandle::MockHandle(1), None, None);
@@ -278,10 +278,10 @@ mod tests {
                 x: 0,
                 y: 0,
             },
-            Layout::default(),
+            Layouts::default(),
             None,
         );
-        let tag = crate::models::Tag::new(TAG_ID, "test", Layout::default());
+        let tag = crate::models::Tag::new(TAG_ID, "test", Layouts::default());
         subject.show_tag(&tag.id);
         let mut w = Window::new(WindowHandle::MockHandle(1), None, None);
         w.tag(&TAG_ID);
