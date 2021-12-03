@@ -88,9 +88,10 @@ author of the theme and could be different.
 
 List of LeftWM dependencies:  
 
-- xorg (libxinerama, xrandr, xorg-server)  
-- bash
-- rust  
+- xorg (runtime, build):(specifically libx11, xrandr, xorg-server, libxinerama)  
+- sh (runtime): any posix-compliant shell for starting up and down files
+- rust (build): >= 1.52.0
+- bash (optional): Most of the themes available use bash, though the scrips maybe converted to any posix-compliant shell
 
 List of common dependencies for themes:
 
@@ -239,7 +240,7 @@ simple black screen on login.  For a more customized look, install a theme.
 1.  Now if you want to get the newest version of leftwm run this command from your build directory:  
 
 ```bash
-git pull origin master
+git pull origin main
 ```
 
 2. Build leftwm
@@ -307,7 +308,7 @@ LeftWM comes packaged with a couple of default themes. There is also a
 For more information about themes check out our [theme guide][theme-guide] or the [wiki].
 
 [community-repo]: https://github.com/leftwm/leftwm-community-themes
-[theme-guide]: https://github.com/leftwm/leftwm/tree/master/themes
+[theme-guide]: https://github.com/leftwm/leftwm/tree/main/themes
 [wiki]: https://github.com/leftwm/leftwm/wiki/Themes
 
 # Configuring
