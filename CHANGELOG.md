@@ -21,6 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Fixed
+
+## [0.4.2]
+### Added
+- Created `Matrix` chatrooms as an pure OSS alternative to `Discord`
+- Added check to `leftwm-check` to ensure all necessary binaries are installed (via PR #1077 by @mautamu)
+- Make Workspace IDs unique and predictable (via PR 1043 by @hertg)
+- Add optional behaviour Settings for `FocusNextTag` and `FocusPreviousTag` to skip or expricitly go to (un-)used tags (via #1086 by @Silicasandwhich)
+- Enhance visibility of configuration errors in `leftwm-check` output (via PR 1072 by @realGWM)
 - Add `SwapWindowTop` command as an alternative to `MoveWindowTop` (via #1005 by @emiliode)
 - Reposition mouse cursor to bottom-right corner of window when resizing (via #1009 by @nemalex)
 - Implemented the new [leftwm-layouts](https://github.com/leftwm/leftwm-layouts) library (via #1000 by @hertg)
@@ -31,8 +40,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix build error caused by deprecated macro in `git_version` (via PR #1075 by VuiMuich)
+- Fix `template.liquid` in `basic_lemonbar` example theme (via PR #1080 by VuiMuich)
+- Fix to correctly restore order of windows after exiting fullscreen (via PR #1053 by @jean-santos)
+- Fix that focus is found after the focused window got destroyed (via PR # 1055 by @jean-santos)
+- Correct writing and formatting of docs in `themes/basic_eww` (via PR #107 by @NAHO)
+- Various performance improvements for `command pipe`, `event loop`, `set_layout` and more (via PRs #1016, #1017, #1018, #1067, #1068 by @vrmiguel)
+- Made AUR packages better compliant to packaging specs and use correct detection for `systemd` based systems (via gists by @eclairevoyant)
 - Fix minor regression where `res_name` and `name` window properties were no longer checked by window rules (via #1002 by @guigot)
-- Changing main width now works on all layouts that have a main column (fixes #96 via #1000 by @hertg)
+- Simplified async test (via PR #1069 by @vrmiguel)
 
 ### Minimum Supported Rust Version
 
